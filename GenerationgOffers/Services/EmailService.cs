@@ -16,44 +16,52 @@ namespace GenerationgOffers.Services
             document.OptionOutputAsXml = true;
             document.LoadHtml(email);
             string t = "Dane klienta: Kwota limitu zł 50000   Email   katrans@katrans.pl      Firma   KATRANS SP. Z O.O.      Telefon 791869376       Branża  transport       Sprzedaż        2.000.000       Strona produktu http://www.smartfaktor.pl/produkty/faktoring/wycena";
-            HtmlNode node = document.DocumentNode;
 
             string text = document.DocumentNode.InnerText;
-            var words = GetWordsFromEmail(t);
 
+            List<string> words = GetWordsFromEmail(t);
             int limitAmount;
-            string emailName;
-            string firmName;
+            string companyEmail;
+            string companyName;
             string telNumber;
-            string trade;
-            string amountString;
+            string line;
+            string sellString;
+            string productPage;
 
-            //foreach (var word in words)
-            //{
-            //    if()
-            //}
-            return null;
-        }
 
-        public IEnumerable<string> GetWordsFromEmail(string email)
-        {
-            MatchCollection matches = Regex.Matches(email, @"\b[\w']*\b");
-
-            return from m in matches.Cast<Match>()
-                   where !string.IsNullOrEmpty(m.Value)
-                   select TrimSuffix(m.Value);
-        }
-
-        static string TrimSuffix(string word)
-        {
-            int apostropheLocation = word.IndexOf('\'');
-            if (apostropheLocation != -1)
+            for (int i = 0; i < words.Count; i++)
             {
-                word = word.Substring(0, apostropheLocation);
+
+            }
+      
+            return t;
+        }
+
+        public int GetLimitAmount(List<string> words)
+        {
+
+        }
+
+        public List<string> GetWordsFromEmail(string email)
+        {
+            List<string> words = new List<string>();
+            string[] separators = new string[] { ",", ":", "\'", " ", "\'s", "\'n" };
+            List<string> listOfWords = new List<string>();
+
+            foreach (string word in email.Split(separators, StringSplitOptions.RemoveEmptyEntries))
+            {
+                words.Add(word);
             }
 
-            return word;
-        }
+            foreach (var word in words)
+            {
+                var w = Regex.Replace(word, @"\s+", "");
 
+                if (w != "")
+                    listOfWords.Add(w);
+            }
+
+            return listOfWords;
+        }
     }
 }
