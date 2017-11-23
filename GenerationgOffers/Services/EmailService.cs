@@ -19,27 +19,130 @@ namespace GenerationgOffers.Services
 
             string text = document.DocumentNode.InnerText;
 
-            List<string> words = GetWordsFromEmail(t);
-            int limitAmount;
-            string companyEmail;
-            string companyName;
-            string telNumber;
-            string line;
-            string sellString;
-            string productPage;
+            //List<string> words = GetWordsFromEmail(t);
+            List<string> words = GetWordsFromEmail(text);
+            int limitAmount = GetLimitAmount(words);
+            string companyEmail = GetCompanyEmail(words);
+            string companyName = GetCompanyName(words);
+            string telNumber = GetTelNumber(words);
+            string line = GetLine(words);
+            int sellValue = GetSellValue(words);
 
+            return t;
+        }
+
+        public string GetCompanyName(List<string> words)
+        {
+            string name = string.Empty;
+            bool isName = false;
 
             for (int i = 0; i < words.Count; i++)
             {
-
+                if (words[i].ToLower() == "firma")
+                {
+                    isName = true;
+                }
+                else if (isName)
+                {
+                    name = name + " " + words[i];
+                }
+                if (words[i + 1].ToLower() == "telefon")
+                {
+                    break;
+                }
             }
-      
-            return t;
+
+            return name;
+        }
+
+        public int GetSellValue(List<string> words)
+        {
+            int sellValue;
+            string sellValueString = string.Empty;
+
+            for (int i = 0; i < words.Count; i++)
+            {
+                if (words[i].ToLower() == "sprzedaż")
+                {
+                    sellValueString = words[i + 1];
+                    break;
+                }
+            }
+
+            string[] separators = new string[] { "." };
+            string sellString = string.Empty;
+
+            foreach (string word in sellValueString.Split(separators, StringSplitOptions.RemoveEmptyEntries))
+            {
+                sellString = sellString + word;
+            }
+
+            if (int.TryParse(sellString, out sellValue))
+                return sellValue;
+
+            return 0;
+        }
+
+        public string GetLine(List<string> words)
+        {
+            string line = string.Empty;
+
+            for (int i = 0; i < words.Count; i++)
+            {
+                if (words[i].ToLower() == "branża")
+                {
+                    line = words[i + 1];
+                    break;
+                }
+            }
+
+            return line;
+        }
+
+        public string GetTelNumber(List<string> words)
+        {
+            string tel = string.Empty;
+
+            for (int i = 0; i < words.Count; i++)
+            {
+                if (words[i].ToLower() == "telefon")
+                {
+                    tel = words[i + 1];
+                    break;
+                }
+            }
+
+            return tel;
+        }
+
+        public string GetCompanyEmail(List<string> words)
+        {
+            string email = string.Empty;
+
+            for (int i = 0; i < words.Count; i++)
+            {
+                if (words[i].ToLower() == "email")
+                {
+                    email = words[i + 1];
+                    break;
+                }
+            }
+
+            return email;
         }
 
         public int GetLimitAmount(List<string> words)
         {
+            int amount = 0;
+            foreach (var word in words)
+            {
+                if (int.TryParse(word, out amount))
+                {
+                    break;
+                }
+            }
 
+            return amount;
         }
 
         public List<string> GetWordsFromEmail(string email)
