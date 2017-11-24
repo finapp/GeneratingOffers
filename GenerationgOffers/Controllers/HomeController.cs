@@ -1,4 +1,5 @@
-﻿using GenerationgOffers.Services;
+﻿using GenerationgOffers.IServices;
+using GenerationgOffers.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,15 @@ namespace GenerationgOffers.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly EmailService _emailService;
-        public HomeController()
+        private readonly IEmailService _emailService;
+
+        public HomeController(IEmailService emailService)
         {
-            _emailService = new EmailService();
+            _emailService = emailService;
         }
+
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
             _emailService.ValidateEmail("das");
             return View();
         }

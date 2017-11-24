@@ -1,4 +1,6 @@
-﻿using HtmlAgilityPack;
+﻿using GenerationgOffers.IServices;
+using GenerationgOffers.Models;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +9,15 @@ using System.Web;
 
 namespace GenerationgOffers.Services
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
+        private Offer offer;
+
+        public EmailService()
+        {
+            offer = new Offer();
+        }
+
         public string ValidateEmail(string email)
         {
             HtmlWeb web = new HtmlWeb();
@@ -19,14 +28,14 @@ namespace GenerationgOffers.Services
 
             string text = document.DocumentNode.InnerText;
 
-            //List<string> words = GetWordsFromEmail(t);
-            List<string> words = GetWordsFromEmail(text);
-            int limitAmount = GetLimitAmount(words);
-            string companyEmail = GetCompanyEmail(words);
-            string companyName = GetCompanyName(words);
-            string telNumber = GetTelNumber(words);
-            string line = GetLine(words);
-            int sellValue = GetSellValue(words);
+            List<string> words = GetWordsFromEmail(t);
+            //List<string> words = GetWordsFromEmail(text);
+            offer.limitAmount = GetLimitAmount(words);
+            offer.companyEmail = GetCompanyEmail(words);
+            offer.companyName = GetCompanyName(words);
+            offer.telNumber = GetTelNumber(words);
+            offer.line = GetLine(words);
+            offer.sellValue = GetSellValue(words);
 
             return t;
         }
